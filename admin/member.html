@@ -11,6 +11,7 @@
    <link rel="stylesheet" href="../asset/css/adminlte.min.css">
    <link rel="stylesheet" href="../asset/css/style.css">
    <link rel="stylesheet" href="../asset/tables/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  
    <style type="text/css">
       table tr td {
          padding: 0.3rem !important;
@@ -152,59 +153,61 @@
                   <div class="card card-info">
                      <br>
                      <div class="col-md-12">
-                        <table id="example1" class="table table-bordered">
-                           <thead>
-                              <tr>
-                                 <th>Profile</th>
-                                 <th>Full Name</th>
-                                 <th>Contact</th>
-                                 <th>Email</th>
-                                 <th>Address</th>
-                                 <th>Account</th>
-                                 <th>Action</th>
-                              </tr>
-                           </thead>
-                           <tbody>
-                              <tr>
-                                 <td><img src="../asset/img/profile.png" width="60" style="border: 2px solid #ddd"></td>
-                                 <td>John Doe</td>
-                                 <td>09987654321</td>
-                                 <td>john@gmail.com</td>
-                                 <td>Manggahan, Pasig</td>
-                                 <td>
-                                    <p class="info">Username: <b>john</b></p>
-                                    <p class="info">Password: <b>***********</b></p>
-                                 </td>
-                                 <td class="text-center">
-                                    <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
-                                       data-target="#edit"><i
-                                       class="fa fa-user-edit"></i> Update</a>
-                                    <a class="btn btn-sm btn-danger" href="#" data-toggle="modal"
-                                       data-target="#delete"><i
-                                       class="fa fa-trash"></i> Delete</a>
-                                 </td>
-                              </tr>
-                              <tr>
-                                 <td><img src="../asset/img/profile.png" width="60" style="border: 2px solid #ddd"></td>
-                                 <td>Jane Doe</td>
-                                 <td>09987654321</td>
-                                 <td>jane@gmail.com</td>
-                                 <td>Rosario, Pasig</td>
-                                 <td>
-                                    <p class="info">Username: <b>jane</b></p>
-                                    <p class="info">Password: <b>***********</b></p>
-                                 </td>
-                                 <td class="text-center">
-                                    <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
-                                       data-target="#edit"><i
-                                       class="fa fa-user-edit"></i> Update</a>
-                                    <a class="btn btn-sm btn-danger" href="#" data-toggle="modal"
-                                       data-target="#delete"><i
-                                       class="fa fa-trash"></i> Delete</a>
-                                 </td>
-                              </tr>
-                           </tbody>
-                        </table>
+                        <div class="table-responsive-mobile">
+                           <table id="example1" class="table table-bordered">
+                              <thead>
+                                 <tr>
+                                    <th>Profile</th>
+                                    <th>Full Name</th>
+                                    <th>Contact</th>
+                                    <th>Email</th>
+                                    <th>Address</th>
+                                    <th>Account</th>
+                                    <th>Action</th>
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                 <tr>
+                                    <td><img src="../asset/img/profile.png" width="60" style="border: 2px solid #ddd"></td>
+                                    <td>John Doe</td>
+                                    <td>09987654321</td>
+                                    <td>john@gmail.com</td>
+                                    <td>Manggahan, Pasig</td>
+                                    <td>
+                                       <p class="info">Username: <b>john</b></p>
+                                       <p class="info">Password: <b>***********</b></p>
+                                    </td>
+                                    <td class="text-center">
+                                       <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
+                                          data-target="#edit"><i
+                                          class="fa fa-user-edit"></i> Update</a>
+                                       <a class="btn btn-sm btn-danger" href="#" data-toggle="modal"
+                                          data-target="#delete"><i
+                                          class="fa fa-trash"></i> Delete</a>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td><img src="../asset/img/profile.png" width="60" style="border: 2px solid #ddd"></td>
+                                    <td>Jane Doe</td>
+                                    <td>09987654321</td>
+                                    <td>jane@gmail.com</td>
+                                    <td>Rosario, Pasig</td>
+                                    <td>
+                                       <p class="info">Username: <b>jane</b></p>
+                                       <p class="info">Password: <b>***********</b></p>
+                                    </td>
+                                    <td class="text-center">
+                                       <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
+                                          data-target="#edit"><i
+                                          class="fa fa-user-edit"></i> Update</a>
+                                       <a class="btn btn-sm btn-danger" href="#" data-toggle="modal"
+                                          data-target="#delete"><i
+                                          class="fa fa-trash"></i> Delete</a>
+                                    </td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </div>
                      </div>
                   </div>
                </div>

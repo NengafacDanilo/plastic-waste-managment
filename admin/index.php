@@ -1,3 +1,11 @@
+<?php
+require_once('../config.php');
+if(!isset($_SESSION["user"])){
+    Header('location:../login.php');
+}
+$userid = $_SESSION['user'];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -159,6 +167,20 @@
                            </span>
                            <span class="info-box-number">
                               <h2>100</h2>
+                           </span>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-12 col-sm-8 col-md-8 offset-sm-2 offset-md-2 offset-lg-2">
+                     <div class="info-box">
+                        <span class="info-box-icon text-warning elevation-4"><img src="../asset/img/Collector.jpeg" width="50"></span>
+
+                        <div class="info-box-content">
+                           <span class="info-box-text">
+                              <h5>Garbage Collector</h5>
+                           </span>
+                           <span class="info-box-number">
+                              <h2>24</h2>
                            </span>
                         </div>
                      </div>

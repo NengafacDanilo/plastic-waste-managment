@@ -1,0 +1,66 @@
+/* Mobile-first responsive table styles */
+@media screen and (max-width: 767px) {
+    .table-responsive-mobile {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table-responsive-mobile table {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    /* Make td behave like blocks on mobile */
+    .table-responsive-mobile tbody tr {
+        display: block;
+        border: 1px solid #dee2e6;
+        margin-bottom: 1rem;
+    }
+
+    .table-responsive-mobile td {
+        display: block;
+        text-align: right;
+        border: none;
+        position: relative;
+        padding-left: 50%;
+        white-space: normal;
+    }
+
+    /* Add labels for each td on mobile */
+    .table-responsive-mobile td:before {
+        content: attr(data-title);
+        position: absolute;
+        left: 6px;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    /* Handle specific table elements */
+    .table-responsive-mobile th {
+        display: none;
+    }
+
+    .table-responsive-mobile td:last-child {
+        border-bottom: 0;
+    }
+
+    /* Improve button layout on mobile */
+    .table-responsive-mobile .btn {
+        display: inline-block;
+        margin: 2px;
+        width: auto;
+    }
+
+    /* Handle DataTables specific elements */
+    .dataTables_length,
+    .dataTables_filter,
+    .dataTables_info,
+    .dataTables_paginate {
+        width: 100%;
+        float: none;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+}

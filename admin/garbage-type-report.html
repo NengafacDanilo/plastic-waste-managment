@@ -11,6 +11,7 @@
    <link rel="stylesheet" href="../asset/css/adminlte.min.css">
    <link rel="stylesheet" href="../asset/css/style.css">
    <link rel="stylesheet" href="../asset/tables/datatables-bs4/css/dataTables.bootstrap4.min.css">
+   
    <style type="text/css">
       table tr td {
          padding: 0.3rem !important;
@@ -152,7 +153,8 @@
                   <div class="card card-info">
                      <br>
                      <div class="col-md-12">
-                        <table class="table table-bordered mytable">
+                        <div class="table-responsive-mobile">
+                           <table class="table table-bordered mytable">
                            <thead>
                               <td><strong>Garbage Type</strong></td>
                               <td>January</td>
@@ -170,7 +172,7 @@
                            </thead>
                            <tbody>
                               <tr>
-                                 <td><strong>Plastic</strong></td>
+                                 <td><strong>Plastic Bag</strong></td>
                                  <td>500</td>
                                  <td>600</td>
                                  <td>700</td>
@@ -185,7 +187,7 @@
                                  <td>1600</td>
                               </tr>
                               <tr>
-                                 <td><strong>Metal</strong></td>
+                                 <td><strong>Plastic Cups</strong></td>
                                  <td>900</td>
                                  <td>1000</td>
                                  <td>1100</td>
@@ -200,7 +202,7 @@
                                  <td>2000</td>
                               </tr>
                               <tr>
-                                 <td><strong>Paper</strong></td>
+                                 <td><strong> Plastic Paper</strong></td>
                                  <td>900</td>
                                  <td>1000</td>
                                  <td>1100</td>
@@ -246,19 +248,19 @@
          var barChartData = {
             labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "Novermber", "December"],
             datasets: [{
-               label: 'Plastics',
+               label: 'Plastic Bags',
                backgroundColor: 'rgb(79,129,189)',
                borderWidth: 1,
                data: [50,60,70,80,90,100,110,120,130,140,150,160]
             },
             {
-               label: 'Metals',
+               label: 'Plastic Cups',
                backgroundColor: 'rgb(192,80,77)',
                borderWidth: 1,
                data: [55,65,75,85,95,105,115,125,135,145,155,165]
             },
             {
-               label: 'Papers',
+               label: 'Plastic Papers',
                backgroundColor: 'rgb(46,231,126)',
                borderWidth: 1,
                data: [60,70,80,90,100,110,120,130,140,150,160,170]

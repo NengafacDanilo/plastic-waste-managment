@@ -11,6 +11,7 @@
    <link rel="stylesheet" href="../asset/css/adminlte.min.css">
    <link rel="stylesheet" href="../asset/css/style.css">
    <link rel="stylesheet" href="../asset/tables/datatables-bs4/css/dataTables.bootstrap4.min.css">
+   
    <style type="text/css">
       table tr td {
          padding: 0.3rem !important;
@@ -152,85 +153,87 @@
                   <div class="card card-info">
                      <br>
                      <div class="col-md-12">
-                        <table id="example1" class="table table-bordered">
-                           <thead>
-                              <tr>
-                                 <th>Member Name</th>
-                                 <th>Garbage Type</th>
-                                 <th>Quantity</th>
-                                 <th>Unit</th>
-                                 <th>Total Amount</th>
-                                 <th>Date</th>
-                                 <th>Action</th>
-                              </tr>
-                           </thead>
-                           <tbody>
-                              <tr>
-                                 <td>John Doe</td>
-                                 <td>Bottle</td>
-                                 <td>12</td>
-                                 <td>pcs</td>
-                                 <td>12.00</td>
-                                 <td>06-24-2021</td>
-                                 <td class="text-center">
-                                    <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
-                                       data-target="#edit"><i
-                                       class="fa fa-edit"></i> Update</a>
-                                    <a class="btn btn-sm btn-danger" href="#" data-toggle="modal"
-                                       data-target="#delete"><i
-                                       class="fa fa-trash"></i> Delete</a>
-                                 </td>
-                              </tr>
-                              <tr>
-                                 <td>John Doe</td>
-                                 <td>Plastic</td>
-                                 <td>23</td>
-                                 <td>pcs</td>
-                                 <td>9.00</td>
-                                 <td>06-24-2021</td>
-                                 <td class="text-center">
-                                    <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
-                                       data-target="#edit"><i
-                                       class="fa fa-edit"></i> Update</a>
-                                    <a class="btn btn-sm btn-danger" href="#" data-toggle="modal"
-                                       data-target="#delete"><i
-                                       class="fa fa-trash"></i> Delete</a>
-                                 </td>
-                              </tr>
-                              <tr>
-                                 <td>John Doe</td>
-                                 <td>Metal</td>
-                                 <td>16</td>
-                                 <td>pcs</td>
-                                 <td>45.00</td>
-                                 <td>06-24-2021</td>
-                                 <td class="text-center">
-                                    <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
-                                       data-target="#edit"><i
-                                       class="fa fa-edit"></i> Update</a>
-                                    <a class="btn btn-sm btn-danger" href="#" data-toggle="modal"
-                                       data-target="#delete"><i
-                                       class="fa fa-trash"></i> Delete</a>
-                                 </td>
-                              </tr>
-                              <tr>
-                                 <td>John Doe</td>
-                                 <td>Paper</td>
-                                 <td>12</td>
-                                 <td>pcs</td>
-                                 <td>12.00</td>
-                                 <td>06-24-2021</td>
-                                 <td class="text-center">
-                                    <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
-                                       data-target="#edit"><i
-                                       class="fa fa-edit"></i> Update</a>
-                                    <a class="btn btn-sm btn-danger" href="#" data-toggle="modal"
-                                       data-target="#delete"><i
-                                       class="fa fa-trash"></i> Delete</a>
-                                 </td>
-                              </tr>
-                           </tbody>
-                        </table>
+                        <div class="table-responsive-mobile">
+                           <table id="example1" class="table table-bordered">
+                              <thead>
+                                 <tr>
+                                    <th>Member Name</th>
+                                    <th>Garbage Type</th>
+                                    <th>Quantity</th>
+                                    <th>Unit</th>
+                                    <th>Total Amount</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                 <tr>
+                                    <td>Nkeng Asong</td>
+                                    <td> Plastic Bottle</td>
+                                    <td>12</td>
+                                    <td>kg</td>
+                                    <td>1500frs</td>
+                                    <td>06-24-2021</td>
+                                    <td class="text-center">
+                                       <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
+                                          data-target="#edit"><i
+                                          class="fa fa-edit"></i> Update</a>
+                                       <a class="btn btn-sm btn-danger" href="#" data-toggle="modal"
+                                          data-target="#delete"><i
+                                          class="fa fa-trash"></i> Delete</a>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td>John Bull</td>
+                                    <td>Plastic Bag</td>
+                                    <td>23</td>
+                                    <td>kg</td>
+                                    <td>900frs</td>
+                                    <td>06-24-2021</td>
+                                    <td class="text-center">
+                                       <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
+                                          data-target="#edit"><i
+                                          class="fa fa-edit"></i> Update</a>
+                                       <a class="btn btn-sm btn-danger" href="#" data-toggle="modal"
+                                          data-target="#delete"><i
+                                          class="fa fa-trash"></i> Delete</a>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td>Frank Koko</td>
+                                    <td>Plastic Cup</td>
+                                    <td>16</td>
+                                    <td>kg</td>
+                                    <td>4500frs</td>
+                                    <td>06-24-2021</td>
+                                    <td class="text-center">
+                                       <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
+                                          data-target="#edit"><i
+                                          class="fa fa-edit"></i> Update</a>
+                                       <a class="btn btn-sm btn-danger" href="#" data-toggle="modal"
+                                          data-target="#delete"><i
+                                          class="fa fa-trash"></i> Delete</a>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td>John Doe</td>
+                                    <td> Plastic Paper</td>
+                                    <td>12</td>
+                                    <td>kg</td>
+                                    <td>1200frs</td>
+                                    <td>06-24-2021</td>
+                                    <td class="text-center">
+                                       <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
+                                          data-target="#edit"><i
+                                          class="fa fa-edit"></i> Update</a>
+                                       <a class="btn btn-sm btn-danger" href="#" data-toggle="modal"
+                                          data-target="#delete"><i
+                                          class="fa fa-trash"></i> Delete</a>
+                                    </td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </div>
                      </div>
                   </div>
                </div>

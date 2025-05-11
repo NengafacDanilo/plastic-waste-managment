@@ -1,3 +1,11 @@
+<?php
+require_once('../config.php');
+// if(!isset($_SESSION["user"])){
+//    Header('location:../login.php');
+// }
+// $userid = $_SESSION['user'];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,7 +42,7 @@
                </a>
             </li>
             <li class="nav-item">
-               <a class="nav-link" data-widget="fullscreen" href="../index.html">
+               <a class="nav-link" data-widget="fullscreen" href="../logout.php">
                   <i class="fas fa-sign-out-alt"></i>
                </a>
             </li>
@@ -50,7 +58,7 @@
                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                   data-accordion="false">
                   <li class="nav-item">
-                     <a href="index.html" class="nav-link">
+                     <a href="index.php" class="nav-link">
                         <img src="../asset/img/dashboard.png" width="30">
                         <p>
                            Dashboard
@@ -58,7 +66,7 @@
                      </a>
                   </li>
                   <li class="nav-item">
-                     <a href="recycle-center.html" class="nav-link">
+                     <a href="recycle-center.php" class="nav-link">
                         <img src="../asset/img/recycle-center.png" width="30">
                         <p>
                            Recycling Center
@@ -66,7 +74,7 @@
                      </a>
                   </li>
                   <li class="nav-item">
-                     <a href="records.html" class="nav-link">
+                     <a href="records.php" class="nav-link">
                         <img src="../asset/img/records.png" width="30">
                         <p>
                            Collection Record
@@ -109,7 +117,7 @@
                                  <h5> Platic Bottle</h5>
                               </span>
                               <span class="info-box-number">
-                                 <h2>Price 150.00</h2>
+                                 <h2>Price 1500frs</h2>
                               </span>
                            </div>
                         </div>
@@ -125,7 +133,7 @@
                                  <h5>Plastic Bags</h5>
                               </span>
                               <span class="info-box-number">
-                                 <h2>Price 150.00</h2>
+                                 <h2>Price 1500frs</h2>
                               </span>
                            </div>
                         </div>
@@ -141,7 +149,7 @@
                                  <h5>Plastic Paper</h5>
                               </span>
                               <span class="info-box-number">
-                                 <h2>Price 100.00</h2>
+                                 <h2>Price 1000frs</h2>
                               </span>
                            </div>
                         </div>
@@ -157,7 +165,7 @@
                                  <h5>Plastic Cups</h5>
                               </span>
                               <span class="info-box-number">
-                                 <h2>Price 250.00</h2>
+                                 <h2>Price 2500frs</h2>
                               </span>
                            </div>
                         </div>
@@ -172,7 +180,7 @@
                              <h5>Total Income</h5>
                           </span>
                           <span class="info-box-number">
-                             <h1 class="text-danger"> 650.00</h1>
+                             <h1 class="text-danger"> 6500frs</h1>
                           </span>
                        </div>
                     </div>

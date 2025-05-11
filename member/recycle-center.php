@@ -1,3 +1,12 @@
+<?php
+require_once('../config.php');
+// if(!isset($_SESSION["user"])){
+//    Header('location:../login.php');
+// }
+// $userid = $_SESSION['user'];
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -41,7 +50,7 @@
                </a>
             </li>
             <li class="nav-item">
-               <a class="nav-link" data-widget="fullscreen" href="../index.html">
+               <a class="nav-link" data-widget="fullscreen" href="../logout.php">
                   <i class="fas fa-sign-out-alt"></i>
                </a>
             </li>
@@ -49,7 +58,7 @@
       </nav>
       <aside class="main-sidebar sidebar-light-primary">
             <!-- Brand Logo -->
-            <a href="index.html" class="brand-link">
+            <a href="index.php" class="brand-link">
          <img src="../asset/img/logo.png" alt="DSMS Logo" width="200">
          </a>
          <div class="sidebar">
@@ -57,7 +66,7 @@
                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                   data-accordion="false">
                   <li class="nav-item">
-                     <a href="index.html" class="nav-link">
+                     <a href="index.php" class="nav-link">
                         <img src="../asset/img/dashboard.png" width="30">
                         <p>
                            Dashboard
@@ -65,7 +74,7 @@
                      </a>
                   </li>
                   <li class="nav-item">
-                     <a href="recycle-center.html" class="nav-link">
+                     <a href="recycle-center.php" class="nav-link">
                         <img src="../asset/img/recycle-center.png" width="30">
                         <p>
                            Recycling Center
@@ -73,7 +82,7 @@
                      </a>
                   </li>
                   <li class="nav-item">
-                     <a href="records.html" class="nav-link">
+                     <a href="records.php" class="nav-link">
                         <img src="../asset/img/records.png" width="30">
                         <p>
                            Collection Record
