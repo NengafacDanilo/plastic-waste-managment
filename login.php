@@ -1,55 +1,97 @@
 <?php  
-            require_once("config.php");
-           
-              
-            ?>
+require_once("config.php");
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In</title>
+    <link rel="stylesheet" href="asset/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="asset/css/main.css">
 </head>
 <body>
     <section class="sign-in">
          <?php
          if(isset($_POST['submit'])){
-            $email =$_POST['email'];
-            $password =$_POST['password'];
-            $password =md5($password);
+            $email = mysqli_real_escape_string($con, $_POST['email']);
+            $password = md5($_POST['password']);
 
-            
-            $result = mysqli_query($con,"SELECT  email, password FROM registration_form WHERE email='$email' ") ;
+            // Using prepared statement to prevent SQL injection
+            $stmt = $con->prepare("SELECT id, email, password, lastName, isadmin FROM registration_form WHERE email = ?");
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-
-
-            if(mysqli_num_rows($result)>0){
-                $row = mysqli_fetch_assoc($result);
-                if(($password === $row['password'])){
-                   if($row['isadmin'] == 1){
-                    $_SESSION['user'] = $row['id'];
-                    $_SESSION['lastName'] = $row['lastName'];
-                    header("Location: admin\index.php");
-                   } else {
+            if($result->num_rows > 0){
+                $row = $result->fetch_assoc();
+                if($password === $row['password']){
                     $_SESSION['user'] = $row['id'];
                     $_SESSION['valid'] = $row['email'];
                     $_SESSION['lastName'] = $row['lastName'];
-                    header("Location: member\index.php");
+                    
+                    if($row['isadmin'] == 1){
+                        header("Location: admin/index.php");
+                    } else if($row['isadmin'] == 0){
+                        $_SESSION['success'] = "Welcome " . $row['lastName'];
+                        $_SESSION['user'] = $row['id'];
+                        $_SESSION['valid'] = $row['email'];
+                        $_SESSION['lastName'] = $row['lastName'];
+                        header("Location: member/index.php");
+                    } else {
+                        header("Location: gabage-collector\index.php");
+                    }
                     exit();
-                   }
-               
+                } else {
+                    $_SESSION['error'] = "Wrong Password";
+                }
+            } else {
+                $_SESSION['error'] = "Email not found";
             }
-            else{
-                echo "<div class='message'>
-                        <p>Wrong Email or Password</p>
-                      </div> <br>";
-                
-            }
-          }
-        
+            $stmt->close();
+        }
 
-         }
+        // Replace the existing popup code with this
+        if (isset($_SESSION['error']) || isset($_SESSION['success'])) {
+            $type = isset($_SESSION['error']) ? 'error' : 'success';
+            $message = isset($_SESSION['error']) ? $_SESSION['error'] : $_SESSION['success'];
+            $icon = $type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle';
+            
+            echo '
+            <div class="popup-overlay"></div>
+            <div class="popup-message ' . $type . '" id="popup">
+                <div class="popup-content">
+                    <i class="fas ' . $icon . '"></i>
+                    <p>' . htmlspecialchars($message) . '</p>
+                </div>
+            </div>
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const popup = document.getElementById("popup");
+                    const overlay = document.querySelector(".popup-overlay");
+                    
+                    // Show popup
+                    setTimeout(() => {
+                        overlay.style.visibility = "visible";
+                        overlay.style.opacity = "1";
+                        popup.classList.add("show");
+                    }, 100);
+                    
+                    // Hide popup
+                    setTimeout(() => {
+                        popup.classList.remove("show");
+                        overlay.style.opacity = "0";
+                        setTimeout(() => {
+                            overlay.style.visibility = "hidden";
+                            popup.style.display = "none";
+                        }, 400);
+                    }, 3000);
+                });
+            </script>
+            ';
+            
+            unset($_SESSION['error'], $_SESSION['success']);
+        }
         ?> 
        
         <article class="sign-in_details">

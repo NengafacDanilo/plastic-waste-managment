@@ -1,0 +1,105 @@
+/* Service Section Styles */
+.service-box {
+	margin-bottom: 40px;
+	position: relative;
+	overflow: hidden;
+}
+
+.service-icon {
+	margin: 0 20px 20px 0;
+	float: left;
+	width: 64px;
+	height: 64px;
+	line-height: 64px;
+	text-align: center;
+	color: #3931af;
+	font-size: 32px;
+	transition: all 0.3s ease-in-out;
+}	
+
+.service-desc {
+	overflow: hidden;
+}
+
+.service-desc h5 {
+	margin-bottom: 10px;
+	color: #444;
+	font-weight: 500;
+	text-transform: uppercase;
+}
+
+.service-desc p {
+	color: #666;
+	margin-bottom: 20px;
+}
+
+/* Utility Classes that might be used in services */
+.marginbot-0{margin-bottom:0 !important;}
+.marginbot-10{margin-bottom:10px !important;}
+.marginbot-20{margin-bottom:20px !important;}
+.marginbot-30{margin-bottom:30px !important;}
+.marginbot-40{margin-bottom:40px !important;}
+.marginbot-50{margin-bottom:50px !important;}
+
+.margintop-0{margin-top:0 !important;}
+.margintop-10{margin-top:10px !important;}
+.margintop-20{margin-top:20px !important;}
+.margintop-30{margin-top:30px !important;}
+.margintop-40{margin-top:40px !important;}
+.margintop-50{margin-top:50px !important;}
+
+/* Section Styling */
+.home-section {
+    padding-top: 150px;
+	display: block;
+    position: relative;
+    z-index: 120;
+	background-color: #fff;
+}
+
+.section-heading h2 {
+	margin-bottom: 10px;
+}
+
+.section-heading p {
+	font-weight: 300;
+	font-size: 20px;
+	line-height: 1.6em;
+}
+
+/* Typography for Services */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0 0 30px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+	color: #444;
+	line-height: 1em;
+}
+
+/* Box Styles */
+.box {
+	margin-bottom: 20px;
+}
+
+.box h4 {
+	font-size: 24px;
+}
+
+.box i {
+	margin-bottom: 30px;
+}
+
+.circled {
+	border-radius: 50%;
+	display: inline-block;
+	color: #fff;
+	width: 1.6em;
+    height: 1.6em;
+	text-align: center;
+	line-height: 1.6em;
+}

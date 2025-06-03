@@ -1,9 +1,9 @@
 <?php
 require_once('../config.php');
-// if(!isset($_SESSION["user"])){
-//    Header('location:../login.php');
-// }
-// $userid = $_SESSION['user'];
+if(!isset($_SESSION["user"])){
+   Header('location:../index.php');
+}
+$userid = $_SESSION['user'];
 ?>
 
 
@@ -16,10 +16,10 @@ require_once('../config.php');
    <link rel="stylesheet" href="../asset/img/icon.png">
       <title>Plastic-Waste-Management-System</title>
    <!-- Font Awesome -->
-   <link rel="stylesheet" href="../asset/fontawesome/css/all.min.css">
-   <link rel="stylesheet" href="../asset/css/adminlte.min.css">
-   <link rel="stylesheet" href="../asset/css/style.css">
-   <link rel="stylesheet" href="../asset/tables/datatables-bs4/css/dataTables.bootstrap4.min.css">
+   <link rel="stylesheet" href="../asset/fontawesome/css/all.min.css ?<?php echo date('Y-m-d H:i:s') ?>">
+   <link rel="stylesheet" href="../asset/css/adminlte.min.css ?<?php echo date('Y-m-d H:i:s') ?>">
+   <link rel="stylesheet" href="../asset/css/style.css ?<?php echo date('Y-m-d H:i:s') ?>">
+   <link rel="stylesheet" href="../asset/tables/datatables-bs4/css/dataTables.bootstrap4.min.css ?<?php echo date('Y-m-d H:i:s') ?>">
    <style type="text/css">
       table tr td {
          padding: 0.3rem !important;

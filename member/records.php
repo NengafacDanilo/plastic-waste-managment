@@ -1,9 +1,10 @@
 <?php
 require_once('../config.php');
-// if(!isset($_SESSION["user"])){
-//    Header('location:../login.php');
-// }
-// $userid = $_SESSION['member_id'];
+if (!isset($_SESSION["user"])) {
+   header('location:../index.php');
+   exit();
+}
+$userid = $_SESSION['user'];
 
 // Check for database connection
 if (!$con) {
@@ -17,39 +18,54 @@ if (isset($_POST['submit'])) {
    $date = mysqli_real_escape_string($con, $_POST['date']);
 
    // Image upload
-   $fileName = $_FILES["fileName"]["name"];
-   $ext = pathinfo($fileName, PATHINFO_EXTENSION);
+   $originalFileName = $_FILES["fileName"]["name"];
+   $ext = strtolower(pathinfo($originalFileName, PATHINFO_EXTENSION));
    $allowedTypes = array("jpg", "jpeg", "png", "gif");
+   $maxFileSize = 5 * 1024 * 1024; // 5MB
    $tempName = $_FILES["fileName"]["tmp_name"];
+
+   // Generate unique filename
+   $fileName = uniqid('waste_') . '.' . $ext;
    $targetPath = "uploads/" . $fileName;
+
+   // Check file size
+   if ($_FILES["fileName"]["size"] > $maxFileSize) {
+      echo "File is too large. Maximum size is 5MB.";
+      exit();
+   }
 
    // Check file type
    if (in_array($ext, $allowedTypes)) {
       // Move uploaded file to the target directory
       if (move_uploaded_file($tempName, $targetPath)) {
          // Insert the data into the database
-         $query = "INSERT INTO menber_records (garbageType, quantity, amount, date, pic) VALUES ('$garbagetype', '$quantity', '$amount', '$date', '$fileName')";
+         $query = "INSERT INTO menber_records (member_id, garbageType, quantity, amount, date, pic) VALUES (?, ?, ?, ?, ?, ?)";
+         $stmt = mysqli_prepare($con, $query);
+         mysqli_stmt_bind_param($stmt, "issdss", $userid, $garbagetype, $quantity, $amount, $date, $fileName);
 
-         if (mysqli_query($con, $query)) {
-            echo " transaction successful";
+         if (mysqli_stmt_execute($stmt)) {
+            $_SESSION['success'] = "Transaction successful";
             header("Location: records.php");
             exit(); // Make sure to exit after redirect
          } else {
-            echo "Error: " . mysqli_error($con);
+            $_SESSION['error'] = "Error: " . mysqli_error($con);
          }
       } else {
-         echo "Failed to upload file.";
+         $_SESSION['error'] = "Failed to upload file.";
       }
    } else {
-      echo "Invalid file type.";
+      $_SESSION['error'] = "Invalid file type.";
    }
 }
 
 
 
-// // Fetch contacts
-$q = "SELECT * FROM menber_records WHERE status=1  ORDER BY id DESC";
-$query = mysqli_query($con, $q);
+// Fetch records - show all records regardless of status
+$q = "SELECT * FROM menber_records WHERE member_id = ? ORDER BY id DESC";
+$stmt = mysqli_prepare($con, $q);
+mysqli_stmt_bind_param($stmt, "i", $userid);
+mysqli_stmt_execute($stmt);
+$query = mysqli_stmt_get_result($stmt);
 
 
 
@@ -68,10 +84,10 @@ mysqli_close($con);
    <link rel="stylesheet" href="../asset/img/icon.png">
    <title> Plastic-Waste-Management-System</title>
    <!-- Font Awesome -->
-   <link rel="stylesheet" href="../asset/fontawesome/css/all.min.css">
-   <link rel="stylesheet" href="../asset/css/adminlte.min.css">
-   <link rel="stylesheet" href="../asset/css/style.css">
-   <link rel="stylesheet" href="../asset/tables/datatables-bs4/css/dataTables.bootstrap4.min.css">
+   <link rel="stylesheet" href="../asset/fontawesome/css/all.min.css ?<?php echo date('Y-m-d H:i:s') ?>">
+   <link rel="stylesheet" href="../asset/css/adminlte.min.css ?<?php echo date('Y-m-d H:i:s') ?>">
+   <link rel="stylesheet" href="../asset/css/style.css ?<?php echo date('Y-m-d H:i:s') ?>">
+   <link rel="stylesheet" href="../asset/tables/datatables-bs4/css/dataTables.bootstrap4.min.css ?<?php echo date('Y-m-d H:i:s') ?>">
    <style type="text/css">
       table tr td {
          padding: 0.3rem !important;
@@ -118,7 +134,7 @@ mysqli_close($con);
       </nav>
       <aside class="main-sidebar sidebar-light-primary">
          <!-- Brand Logo -->
-         <a href="index.html" class="brand-link">
+         <a href="index.php" class="brand-link">
             <img src="../asset/img/logo.png" alt="DSMS Logo" width="200">
          </a>
          <div class="sidebar">
@@ -180,68 +196,94 @@ mysqli_close($con);
                <div class="card card-info">
                   <br>
                   <div class="col-md-12">
-                      <?php
-                           $sn = 1;
-                             if(mysqli_num_rows($query) > 0) {
-                         ?>
-                     <table id="example1" class="table table-bordered">
-                        <thead>
-                           <tr>
-                              <th>Sn</th>
-                              <th>Garbage Type</th>
-                              <th>Quantity</th>
-                              <th>Total Amount</th>
-                              <th>Date</th>
-                              <th>Upload of scan Garbage</th>
-                              <th>Status</th>
-                              <th>Action</th>
-                           </tr>
-                        </thead>
-                        <tbody>
-                           <?php 
-                        $sn = 1;
-                        while ($record = mysqli_fetch_assoc($query)) { 
-                        ?>
-                           <tr>
-                              <td> <?php echo $sn ?></td>
-                              <td>
-                                 <?php echo $record['garbageType'] ?>
-                              </td>
-                              <td>
-                                 <?php echo $record['quantity'] ?>
-                              </td>
-                              <td>
-                                 <?php echo $record['amount'] ?>
-                              </td>
-                              <td>
-                                 <?php echo $record['date'] ?>
-                              </td>
-                              <td>
-                                 <img src="uploads/<?php echo $record['pic']; ?>" width="60" style="border: 2px solid #ddd">
-                              </td>
-                              <td><span class="badge bg-success">accepted</span></td>
-                              <td class="text-center">
-                                 <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
-                                    data-target="#edit" data-id="<?php echo $record['id']; ?>" 
-                                    data-garbage-type="<?php echo $record['garbageType']; ?>"
-                                    data-quantity="<?php echo $record['quantity']; ?>"
-                                    data-amount="<?php echo $record['amount']; ?>"
-                                    data-date="<?php echo $record['date']; ?>"
-                                    data-pic="<?php echo $record['pic']; ?>"><i
-                                       class="fa fa-edit"></i> Update</a>
-                                 <a class="btn btn-sm btn-danger" href="#delete" data-toggle="modal"
-                                    data-target="#delete"><i
-                                       class="fa fa-trash"></i> Delete</a>
-                              </td>
-                           </tr>
-                          <?php $sn++; } ?>
-                        </tbody>
-                     </table>
                      <?php
-                         } else {
-                           echo '<p>No Records found.</p>';
+                     $sn = 1;
+                     if (mysqli_num_rows($query) > 0) {
+                     ?>
+                        <table id="example1" class="table table-bordered">
+                           <thead>
+                              <tr>
+                                 <th>Sn</th>
+                                 <th>Garbage Type</th>
+                                 <th>Quantity</th>
+                                 <th>Total Amount</th>
+                                 <th>Date</th>
+                                 <th>Upload of scan Garbage</th>
+                                 <th>Status</th>
+                                 <th>Action</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <?php
+                              $sn = 1;
+                              while ($record = mysqli_fetch_assoc($query)) {
+                              ?>
+                                 <tr>
+                                    <td> <?php echo $sn ?></td>
+                                    <td>
+                                       <?php echo $record['garbageType'] ?>
+                                    </td>
+                                    <td>
+                                       <?php echo $record['quantity'] ?>
+                                    </td>
+                                    <td>
+                                       <?php echo $record['amount'] ?>
+                                    </td>
+                                    <td>
+                                       <?php echo $record['date'] ?>
+                                    </td>
+                                    <td>
+                                       <?php if (!empty($record['pic'])): ?>
+                                          <img src="uploads/<?php echo htmlspecialchars($record['pic']); ?>"
+                                             width="60"
+                                             height="60"
+                                             style="border: 2px solid #ddd; object-fit: cover;"
+                                             onerror="this.src='../asset/img/no-image.png';"
+                                             alt="Garbage Image">
+                                       <?php else: ?>
+                                          <img src="../asset/img/no-image.png"
+                                             width="60"
+                                             height="60"
+                                             style="border: 2px solid #ddd;"
+                                             alt="No Image Available">
+                                       <?php endif; ?>
+                                    </td>                                    <td class="text-center">
+                                       <?php 
+                                          switch($record['status']) {
+                                             case 1:
+                                                echo '<span class="badge bg-success" style="font-size: 0.85rem; padding: 8px 12px; border-radius: 4px; font-weight: 500; letter-spacing: 0.3px;">Accepted</span>';
+                                                break;
+                                             case 2:
+                                                echo '<span class="badge bg-danger" style="font-size: 0.85rem; padding: 8px 12px; border-radius: 4px; font-weight: 500; letter-spacing: 0.3px;">Rejected</span>';
+                                                break;
+                                             default:
+                                                echo '<span class="badge bg-warning" style="font-size: 0.85rem; padding: 8px 12px; border-radius: 4px; font-weight: 500; letter-spacing: 0.3px;">Pending</span>';
+                                          }
+                                       ?>
+                                    </td>
+                                    <td class="text-center">
+                                       <a class="btn btn-sm btn-success" href="#" data-toggle="modal"
+                                          data-target="#edit" data-id="<?php echo $record['id']; ?>"
+                                          data-garbage-type="<?php echo $record['garbageType']; ?>"
+                                          data-quantity="<?php echo $record['quantity']; ?>"
+                                          data-amount="<?php echo $record['amount']; ?>"
+                                          data-date="<?php echo $record['date']; ?>"
+                                          data-pic="<?php echo $record['pic']; ?>"><i
+                                             class="fa fa-edit"></i> Update</a>
+                                       <a class="btn btn-sm btn-danger" href="#" data-toggle="modal"
+                                          data-target="#delete" data-id="<?php echo $record['id']; ?>"><i
+                                             class="fa fa-trash"></i> Delete</a>
+                                    </td>
+                                 </tr>
+                              <?php $sn++;
+                              } ?>
+                           </tbody>
+                        </table>
+                     <?php
+                     } else {
+                        echo '<p>No Records found.</p>';
                      }
-                ?>
+                     ?>
                   </div>
                </div>
             </div>
@@ -259,8 +301,8 @@ mysqli_close($con);
                <img src="../asset/img/sent.png" alt="" width="50" height="46">
                <h3>Are you sure want to delete this Record?</h3>
                <div class="m-t-20">
-                  <a href="delete-record.php?id=<?php echo $record['id'] ?>" class="btn btn-white" data-dismiss="modal">Close</a>
-                  <button type="submit" class="btn btn-danger">Delete</button>
+                  <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                  <a href="#" class="btn btn-danger confirm-delete">Delete</a>
                </div>
             </div>
          </div>
@@ -313,7 +355,7 @@ mysqli_close($con);
                                  <div class="form-group">
                                     <label class="float-left">Current Picture</label>
                                     <div>
-                                        <img src="uploads/<?php echo $record['pic']; ?>" width="100" style="border: 2px solid #ddd; margin-bottom: 10px;">
+                                       <img src="uploads/<?php echo $record['pic']; ?>" width="100" style="border: 2px solid #ddd; margin-bottom: 10px;">
                                     </div>
                                     <label class="float-left">Choose New Picture (optional)</label>
                                     <div class="input-group">
@@ -433,10 +475,10 @@ mysqli_close($con);
       // });
       $(function() {
          // Handle edit modal data
-         $('#edit').on('show.bs.modal', function (event) {
+         $('#edit').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
             var modal = $(this);
-            
+
             // Get data from button
             var id = button.data('id');
             var garbageType = button.data('garbage-type');
@@ -444,7 +486,7 @@ mysqli_close($con);
             var amount = button.data('amount');
             var date = button.data('date');
             var pic = button.data('pic');
-            
+
             // Set values in form
             modal.find('input[name="id"]').val(id);
             modal.find('select[name="garbage_type"]').val(garbageType);
@@ -454,10 +496,19 @@ mysqli_close($con);
             modal.find('img').attr('src', 'uploads/' + pic);
          });
 
+         // Handle delete modal data
+         $('#delete').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
+
+            // Set up delete button click handler
+            $(this).find('.confirm-delete').attr('href', 'delete-records.php?id=' + id);
+         });
+
          // Garbage type prices in XAF
          const garbagePrices = {
             'Plastic Bag': 1500,
-            'Plastic Bottle': 1500, 
+            'Plastic Bottle': 1500,
             'Plastic Cup': 1000,
             'Plastic Paper': 1000,
             'Plastic Can': 2500
@@ -468,7 +519,7 @@ mysqli_close($con);
             const quantity = parseFloat($(form).find('input[name="quantity"]').val()) || 0;
             const pricePerUnit = garbagePrices[garbageType];
             const total = quantity * pricePerUnit;
-            
+
             // Update the amount input in the specific form
             $(form).find('input[name="amount"]').val(total + ' XAF');
          }

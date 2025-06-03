@@ -1,9 +1,22 @@
 <?php
 require_once('../config.php');
-// if(!isset($_SESSION["user"])){
-//    Header('location:../login.php');
+if(!isset($_SESSION["user"])){
+   Header('location:../index.php');
+}
+$userid = $_SESSION['user'];
+ // fetch user data from database
+$q = "SELECT * FROM garbage_type WHERE id='$userid'";
+$query = mysqli_query($con, $q);
+// if($query){
+//    $row = mysqli_fetch_assoc($query);
+//    $garbagetype = $row['garbage_type'];
+//    $message = $row['description'];
+//    $amount = $row['reward'];
 // }
-// $userid = $_SESSION['user'];
+// else{
+//    echo "Error: " . mysqli_error($con);
+// }
+
 ?>
 
 <!DOCTYPE html>
@@ -15,10 +28,10 @@ require_once('../config.php');
    <link rel="stylesheet" href="../asset/img/icon.png">
       <title>Platic-Waste-Management-System</title>
    <!-- Font Awesome -->
-   <link rel="stylesheet" href="../asset/fontawesome/css/all.min.css">
-   <link rel="stylesheet" href="../asset/css/adminlte.min.css">
-   <link rel="stylesheet" href="../asset/css/style.css">
-   <link rel="stylesheet" href="../asset/tables/datatables-bs4/css/dataTables.bootstrap4.min.css">
+   <link rel="stylesheet" href="../asset/fontawesome/css/all.min.css ?<?php echo date('Y-m-d H:i:s') ?>">
+   <link rel="stylesheet" href="../asset/css/adminlte.min.css ?<?php echo date('Y-m-d H:i:s') ?>">
+   <link rel="stylesheet" href="../asset/css/style.css ?<?php echo date('Y-m-d H:i:s') ?>">
+   <link rel="stylesheet" href="../asset/tables/datatables-bs4/css/dataTables.bootstrap4.min.css?<?php echo date('Y-m-d H:i:s') ?>">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -32,7 +45,7 @@ require_once('../config.php');
          </ul>
          <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-               <a class="nav-link" href="#" role="button">
+               <a class="nav-link" href="../profile.php" role="button">
                   <img src="../asset/img/avatar.png" class="img-circle" alt="User Image" width="40" style="margin-top: -8px;">
                </a>
             </li>
@@ -156,7 +169,7 @@ require_once('../config.php');
                      </div>
                      <div class="col-12 col-sm-6 col-md-6">
                         <div class="info-box">
-                           <span class="info-box-icon text-warning elevation-4"><img src="../asset/img/metal.png" width="50"></span>
+                           <span class="info-box-icon text-warning elevation-4"><img src="../asset/img/recyclable_3271305.png" width="50"></span>
                            <div class="info-box-content">
                               <span class="info-box-text">
                                  <span class="float-sm-right"><a class="btn btn-sm" href="#" data-toggle="modal"

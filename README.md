@@ -39,3 +39,8 @@ A web-based system for managing plastic waste collection with an integrated rewa
 - `/garbage-collector` - Collector interface
 - `/asset` - Static resources (CSS, JS, images)
 - `/uploads` - User uploaded files
+
+// PASSWORD for users
+- nkengafacdanilo"gmail.com  [ASONGTIA] member
+-tom@gmail.com [123456789] member
+- foncham@gmail.com [1234567890] admin

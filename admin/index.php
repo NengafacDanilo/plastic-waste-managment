@@ -1,9 +1,51 @@
 <?php
 require_once('../config.php');
-if(!isset($_SESSION["user"])){
-    Header('location:../login.php');
+if (!isset($_SESSION["user"])) {
+   Header('location:../login.php');
 }
+
+// query for total number of members
+$total_users_query = "SELECT COUNT(*) as total_users FROM registration_form";
+$total_users_result = mysqli_query($con, $total_users_query);
+
+if ($total_users_result) {
+    $total_users_row = mysqli_fetch_assoc($total_users_result);
+    $total_users = $total_users_row['total_users'];
+} else {
+    $total_users = 0; // Default value if query fails
+    error_log("Error Counting Users: " . mysqli_error($con));
+}
+
+// query for total number of garbage Collectors
+$total_garbage_query = "SELECT COUNT(*) as total_users FROM registration_form where isadmin=2";
+$total_garbage_result = mysqli_query($con, $total_garbage_query);
+
+if ($total_garbage_result) {
+    $total_garbage_row = mysqli_fetch_assoc($total_garbage_result);
+    $total_garbage = $total_garbage_row['total_users'];
+} else {
+    $total_garbage = 0; // Default value if query fails
+    error_log("Error Counting Garbage Collectors: " . mysqli_error($con));
+}
+
+// query for the total garbage collected
+$total_garbage_collected_query = "SELECT COUNT(*) as total_users FROM menber_records where status=1";
+$total_garbage_collected_result = mysqli_query($con, $total_garbage_collected_query);
+
+if ($total_garbage_collected_result) {
+    $total_garbage_collected_row = mysqli_fetch_assoc($total_garbage_collected_result);
+    $total_garbage_collected = $total_garbage_collected_row['total_users'];
+} else {
+    $total_garbage = 0; // Default value if query fails
+    error_log("Error Counting Garbage Collected: " . mysqli_error($con));
+}
+
+
+
 $userid = $_SESSION['user'];
+$q = "SELECT * FROM registration_form WHERE isadmin=1  ORDER BY id DESC";
+$query = mysqli_query($con, $q);
+
 ?>
 
 <!DOCTYPE html>
@@ -13,12 +55,12 @@ $userid = $_SESSION['user'];
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <link rel="icon" href="../asset/img/icon.png">
-      <title>Plastic-Waste-Management-System</title>
+   <title>Plastic-Waste-Management-System</title>
    <!-- Font Awesome -->
-   <link rel="stylesheet" href="../asset/fontawesome/css/all.min.css">
-   <link rel="stylesheet" href="../asset/css/adminlte.min.css">
-   <link rel="stylesheet" href="../asset/css/style.css">
-   <link rel="stylesheet" href="../asset/tables/datatables-bs4/css/dataTables.bootstrap4.min.css">
+   <link rel="stylesheet" href="../asset/fontawesome/css/all.min.css ?<?php echo date('Y-m-d H:i:s') ?>">
+   <link rel="stylesheet" href="../asset/css/adminlte.min.css ?<?php echo date('Y-m-d H:i:s') ?>">
+   <link rel="stylesheet" href="../asset/css/style.css ?<?php echo date('Y-m-d H:i:s') ?>">
+   <link rel="stylesheet" href="../asset/tables/datatables-bs4/css/dataTables.bootstrap4.min.css ?<?php echo date('Y-m-d H:i:s') ?>">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -42,23 +84,23 @@ $userid = $_SESSION['user'];
                </a>
             </li>
             <li class="nav-item">
-               <a class="nav-link" data-widget="fullscreen" href="../index.html">
+               <a class="nav-link" data-widget="fullscreen" href="../logout.php">
                   <i class="fas fa-sign-out-alt"></i>
                </a>
             </li>
          </ul>
       </nav>
       <aside class="main-sidebar sidebar-light-primary">
-            <!-- Brand Logo -->
-            <a href="index.html" class="brand-link">
-         <img src="../asset/img/logo.png" alt="DSMS Logo" width="200">
+         <!-- Brand Logo -->
+         <a href="index.php" class="brand-link">
+            <img src="../asset/img/logo.png" alt="DSMS Logo" width="200">
          </a>
          <div class="sidebar">
             <nav class="mt-2">
                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                   data-accordion="false">
                   <li class="nav-item">
-                     <a href="index.html" class="nav-link">
+                     <a href="index.php" class="nav-link">
                         <img src="../asset/img/dashboard.png" width="30">
                         <p>
                            Dashboard
@@ -66,7 +108,7 @@ $userid = $_SESSION['user'];
                      </a>
                   </li>
                   <li class="nav-item">
-                     <a href="recycle-center.html" class="nav-link">
+                     <a href="recycle-center.php" class="nav-link">
                         <img src="../asset/img/recycle-center.png" width="30">
                         <p>
                            Recycling Center
@@ -74,7 +116,7 @@ $userid = $_SESSION['user'];
                      </a>
                   </li>
                   <li class="nav-item">
-                     <a href="garbage-type.html" class="nav-link">
+                     <a href="garbage-type.php" class="nav-link">
                         <img src="../asset/img/garbage-type.png" width="30">
                         <p>
                            Garbage Type
@@ -82,7 +124,7 @@ $userid = $_SESSION['user'];
                      </a>
                   </li>
                   <li class="nav-item">
-                     <a href="member.html" class="nav-link">
+                     <a href="member.php" class="nav-link">
                         <img src="../asset/img/member.png" width="30">
                         <p>
                            Members
@@ -90,7 +132,7 @@ $userid = $_SESSION['user'];
                      </a>
                   </li>
                   <li class="nav-item">
-                     <a href="records.html" class="nav-link">
+                     <a href="records.php" class="nav-link">
                         <img src="../asset/img/records.png" width="30">
                         <p>
                            Collection Record
@@ -107,13 +149,13 @@ $userid = $_SESSION['user'];
                      </a>
                      <ul class="nav nav-treeview">
                         <li class="nav-item">
-                           <a href="garbage-type-report.html" class="nav-link">
+                           <a href="garbage-type-report.php" class="nav-link">
                               <i class="nav-icon far fa-circle"></i>
                               <p>Garbage Type</p>
                            </a>
                         </li>
                         <li class="nav-item">
-                           <a href="income-report.html" class="nav-link">
+                           <a href="income-report.php" class="nav-link">
                               <i class="nav-icon far fa-circle"></i>
                               <p>Income by Center</p>
                            </a>
@@ -166,7 +208,9 @@ $userid = $_SESSION['user'];
                               <h5>Members</h5>
                            </span>
                            <span class="info-box-number">
-                              <h2>100</h2>
+                              <h2><?php
+                                    echo $total_users;
+                                    ?></h2>
                            </span>
                         </div>
                      </div>
@@ -180,7 +224,9 @@ $userid = $_SESSION['user'];
                               <h5>Garbage Collector</h5>
                            </span>
                            <span class="info-box-number">
-                              <h2>24</h2>
+                              <h2><?php
+                                    echo $total_garbage;
+                                    ?></h2>
                            </span>
                         </div>
                      </div>
@@ -194,7 +240,9 @@ $userid = $_SESSION['user'];
                               <h5>Garbage Collected</h5>
                            </span>
                            <span class="info-box-number">
-                              <h2>75</h2>
+                              <h2><?php
+                                    echo $total_garbage_collected;
+                                    ?></h2>
                            </span>
                         </div>
                      </div>
