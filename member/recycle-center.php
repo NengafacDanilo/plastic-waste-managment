@@ -4,7 +4,20 @@ if(!isset($_SESSION["user"])){
    Header('location:../index.php');
 }
 $userid = $_SESSION['user'];
+
+// Fetch records using prepared statement
+$stmt = $con->prepare("SELECT * FROM recycling_center  ORDER BY id DESC");
+if (!$stmt) {
+   die("Prepare failed: " . $con->error);
+}
+
+
+
+
+
+
 ?>
+
 
 
 <!DOCTYPE html>

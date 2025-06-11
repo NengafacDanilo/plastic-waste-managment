@@ -61,7 +61,7 @@ if (isset($_POST['submit'])) {
 
 
 // Fetch records - show all records regardless of status
-$q = "SELECT * FROM menber_records WHERE member_id = ? ORDER BY id DESC";
+$q = "SELECT * FROM menber_records WHERE member_id = ? AND isCollected=0 ORDER BY id DESC";
 $stmt = mysqli_prepare($con, $q);
 mysqli_stmt_bind_param($stmt, "i", $userid);
 mysqli_stmt_execute($stmt);
@@ -89,8 +89,47 @@ mysqli_close($con);
    <link rel="stylesheet" href="../asset/css/style.css ?<?php echo date('Y-m-d H:i:s') ?>">
    <link rel="stylesheet" href="../asset/tables/datatables-bs4/css/dataTables.bootstrap4.min.css ?<?php echo date('Y-m-d H:i:s') ?>">
    <style type="text/css">
+      .card-info {
+         max-height: calc(100vh - 200px);
+         overflow: hidden;
+      }
+
+      .table-responsive {
+         height: calc(100vh - 250px);
+         overflow-y: auto;
+         position: relative;
+      }
+
+      #example1 {
+         position: relative;
+         width: 100%;
+         background-color: #ffffff;
+         border-collapse: collapse;
+      }
+
+      #example1 thead {
+         position: sticky;
+         top: 0;
+         z-index: 1;
+         background-color: #ffffff;
+      }
+
+      #example1 thead th {
+         background-color: #f4f6f9;
+         border-bottom: 2px solid #dee2e6;
+         padding: 12px 8px;
+         font-weight: 600;
+         text-align: left;
+         vertical-align: middle;
+      }
+
+      #example1 tbody tr:hover {
+         background-color: rgba(0,0,0,0.02);
+      }
+
       table tr td {
          padding: 0.3rem !important;
+         vertical-align: middle;
       }
 
       table tr td p {
@@ -101,6 +140,36 @@ mysqli_close($con);
 
       td a.btn {
          font-size: 0.7rem;
+      }
+
+      /* Scrollbar Styling */
+      .table-responsive::-webkit-scrollbar {
+         width: 6px;
+         height: 6px;
+      }
+
+      .table-responsive::-webkit-scrollbar-track {
+         background: #f1f1f1;
+         border-radius: 3px;
+      }
+
+      .table-responsive::-webkit-scrollbar-thumb {
+         background: #888;
+         border-radius: 3px;
+      }
+
+      .table-responsive::-webkit-scrollbar-thumb:hover {
+         background: #555;
+      }
+
+      @media (max-width: 768px) {
+         .card-info {
+            max-height: calc(100vh - 150px);
+         }
+         
+         .table-responsive {
+            height: calc(100vh - 200px);
+         }
       }
    </style>
 </head>
@@ -116,7 +185,7 @@ mysqli_close($con);
          </ul>
          <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-               <a class="nav-link" href="#" role="button">
+               <a class="nav-link" href="../profile.php" role="button">
                   <img src="../asset/img/avatar.png" class="img-circle" alt="User Image" width="40" style="margin-top: -8px;">
                </a>
             </li>
@@ -196,11 +265,12 @@ mysqli_close($con);
                <div class="card card-info">
                   <br>
                   <div class="col-md-12">
-                     <?php
-                     $sn = 1;
-                     if (mysqli_num_rows($query) > 0) {
-                     ?>
-                        <table id="example1" class="table table-bordered">
+                     <div class="table-responsive">
+                        <?php
+                        $sn = 1;
+                        if (mysqli_num_rows($query) > 0) {
+                        ?>
+                           <table id="example1" class="table table-bordered">
                            <thead>
                               <tr>
                                  <th>Sn</th>
@@ -443,7 +513,7 @@ mysqli_close($con);
                   <!-- /.card-body -->
                   <div class="card-footer">
                      <a href="#" class="btn btn-cancel" data-dismiss="modal">Cancel</a>
-                     <button type="submit" class="btn btn-save" onclick="calculateTotalPrice()">
+                     <button type="submit" class="btn btn-save" onclick="window.open('https://checkout.fapshi.com/link/59495612', '_blank'); calculateTotalPrice();">
                         <input type="submit" name="submit" value="Save"></button>
                   </div>
                </form>

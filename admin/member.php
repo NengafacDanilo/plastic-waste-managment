@@ -13,16 +13,87 @@
    <link rel="stylesheet" href="../asset/tables/datatables-bs4/css/dataTables.bootstrap4.min.css ?<?php echo date('Y-m-d H:i:s') ?>">
   
    <style type="text/css">
+      .card-info {
+         max-height: calc(100vh - 200px);
+         overflow: hidden;
+      }
+
+      .table-responsive {
+         height: calc(100vh - 250px);
+         overflow-y: auto;
+         position: relative;
+      }
+
+      #example1 {
+         position: relative;
+         width: 100%;
+         background-color: #ffffff;
+         border-collapse: collapse;
+      }
+
+      #example1 thead {
+         position: sticky;
+         top: 0;
+         z-index: 1;
+         background-color: #ffffff;
+      }
+
+      #example1 thead th {
+         background-color: #f4f6f9;
+         border-bottom: 2px solid #dee2e6;
+         padding: 12px 8px;
+         font-weight: 600;
+         text-align: left;
+         vertical-align: middle;
+      }
+
+      #example1 tbody tr:hover {
+         background-color: rgba(0,0,0,0.02);
+      }
+
       table tr td {
          padding: 0.3rem !important;
+         vertical-align: middle;
       }
-      table tr td p{
+
+      table tr td p {
          margin-top: -0.8rem !important;
          margin-bottom: -0.8rem !important;
          font-size: 0.9rem;
       }
-      td a.btn{
+
+      td a.btn {
          font-size: 0.7rem;
+      }
+
+      /* Scrollbar Styling */
+      .table-responsive::-webkit-scrollbar {
+         width: 6px;
+         height: 6px;
+      }
+
+      .table-responsive::-webkit-scrollbar-track {
+         background: #f1f1f1;
+         border-radius: 3px;
+      }
+
+      .table-responsive::-webkit-scrollbar-thumb {
+         background: #888;
+         border-radius: 3px;
+      }
+
+      .table-responsive::-webkit-scrollbar-thumb:hover {
+         background: #555;
+      }
+
+      @media (max-width: 768px) {
+         .card-info {
+            max-height: calc(100vh - 150px);
+         }
+         
+         .table-responsive {
+            height: calc(100vh - 200px);
+         }
       }
    </style>
 </head>

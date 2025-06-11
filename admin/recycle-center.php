@@ -1,3 +1,28 @@
+<?php
+require_once('../config.php');
+if (!isset($_SESSION["user"])) {
+   header('location:../index.php');
+   exit();
+}
+$userid = $_SESSION['user'];
+
+if (!$con) {
+   die("Connection failed: " . mysqli_connect_error());
+}
+
+if (isset($_POST['submit'])) {
+   // Sanitize inputs
+   $garbagetype = mysqli_real_escape_string($con, $_POST['garbage_type']);
+   $quantity = mysqli_real_escape_string($con, $_POST['quantity']);
+   $amount = mysqli_real_escape_string($con, $_POST['amount']);
+   $date = mysqli_real_escape_string($con, $_POST['date']);
+
+
+
+
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -262,25 +287,25 @@
                               <div class="col-md-12">
                                  <div class="form-group">
                                     <label class="float-left">Junkshop Name</label>
-                                    <input type="text" class="form-control" placeholder="Junkshop Name">
+                                    <input type="text" class="form-control" placeholder="Junkshop Name" name="shop">
                                  </div>
                               </div>
                               <div class="col-md-12">
                                  <div class="form-group">
                                     <label class="float-left">Address</label>
-                                    <input type="text" class="form-control" placeholder="Address" id="edit-address">
+                                    <input type="text" class="form-control" placeholder="Address" id="edit-address" name="address">
                                  </div>
                               </div>
                               <div class="col-md-6">
                                  <div class="form-group">
                                     <label class="float-left">Latitude</label>
-                                    <input type="text" class="form-control" placeholder="Latitude" id="edit-latitude">
+                                    <input type="text" class="form-control" placeholder="Latitude" id="edit-latitude" name="lat">
                                  </div>
                               </div>
                               <div class="col-md-6">
                                  <div class="form-group">
                                     <label class="float-left">Longitude</label>
-                                    <input type="text" class="form-control" placeholder="Longitude" id="edit-longitude">
+                                    <input type="text" class="form-control" placeholder="Longitude" id="edit-longitude" name="long">
                                  </div>
                               </div>
                               <div class="col-md-12">
@@ -291,13 +316,13 @@
                               <div class="col-md-12">
                                  <div class="form-group">
                                     <label class="float-left">Contact</label>
-                                    <input type="text" class="form-control" placeholder="Contact">
+                                    <input type="text" class="form-control" placeholder="Contact" name="contact">
                                  </div>
                               </div>
                               <div class="col-md-12">
                                  <div class="form-group">
                                     <label class="float-left">Email</label>
-                                    <input type="text" class="form-control" placeholder="Email">
+                                    <input type="text" class="form-control" placeholder="Email" name="email">
                                  </div>
                               </div>
                            </div>

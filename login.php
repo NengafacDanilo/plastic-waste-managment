@@ -102,15 +102,15 @@ require_once("config.php");
                 <div class="form_control">
                     <label for="email">Email</label>
                     <input type="email" id="email" 
-                    name="email" placeholder="Enter your email">       
+                    name="email" placeholder="Enter your email" required>       
                 </div>
                 <div class="form_control">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Enter your password">       
+                    <input type="password" id="password" name="password" placeholder="Enter your password " required>       
                 </div>
                 <div class="sign-in_extras">
                     <div>
-                        <input type="checkbox" id="remember">
+                        <input type="checkbox" id="remember" >
                         <label for="remember">Remember for 30 days</label>
                     </div>
                         <a href="">Forgot password?</a>

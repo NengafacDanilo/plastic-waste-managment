@@ -29,14 +29,14 @@ if ($total_garbage_result) {
 }
 
 // query for the total garbage collected
-$total_garbage_collected_query = "SELECT COUNT(*) as total_users FROM menber_records where status=1";
+$total_garbage_collected_query = "SELECT COUNT(*) as total_collected FROM menber_records WHERE status=1 AND isCollected=1";
 $total_garbage_collected_result = mysqli_query($con, $total_garbage_collected_query);
 
 if ($total_garbage_collected_result) {
     $total_garbage_collected_row = mysqli_fetch_assoc($total_garbage_collected_result);
-    $total_garbage_collected = $total_garbage_collected_row['total_users'];
+    $total_garbage_collected = isset($total_garbage_collected_row['total_collected']) ? $total_garbage_collected_row['total_collected'] : 0;
 } else {
-    $total_garbage = 0; // Default value if query fails
+    $total_garbage_collected = 0; // Default value if query fails
     error_log("Error Counting Garbage Collected: " . mysqli_error($con));
 }
 

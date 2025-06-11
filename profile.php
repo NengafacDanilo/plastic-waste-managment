@@ -1,49 +1,114 @@
 <?php
 require_once('config.php');
-// if(!isset($_SESSION["user"])){
-//    Header('location:../login.php');
-// }
-// $userid = $_SESSION['member_id'];
+if(!isset($_SESSION["user"])){
+   Header('location:../login.php');
+}
+$userid = $_SESSION['user'];
 
 // Check for database connection
 if (!$con) {
    die("Connection failed: " . mysqli_connect_error());
 }
-if (isset($_POST['submit'])) {
+// Fetch existing user data
+$query = "SELECT * FROM profileid WHERE id = '$userid'";
+$result = mysqli_query($con, $query);
+$user_data = mysqli_fetch_assoc($result);
+
+if (isset($_POST['action'])) {
+   $action = $_POST['action'];
+   
    // Sanitize inputs
-   $garbagetype = mysqli_real_escape_string($con, $_POST['garbage_type']);
-   $message = mysqli_real_escape_string($con, $_POST['message']);
-   $amount = mysqli_real_escape_string($con, $_POST['amount']);
-    
-       
-// Image upload
-   $fileName = $_FILES["fileName"]["name"];
-   $ext = pathinfo($fileName, PATHINFO_EXTENSION);
+   $middlename = !empty($_POST['middleName']) ? mysqli_real_escape_string($con, $_POST['middleName']) : '';
+   $birthday = !empty($_POST['birthday']) ? mysqli_real_escape_string($con, $_POST['birthday']) : '';
+   $username = !empty($_POST['userName']) ? mysqli_real_escape_string($con, $_POST['userName']) : '';
+   
+   if ($action == 'edit') {
+       // Make form fields editable (handled by HTML)
+       $success_message = "You can now edit your profile.";
+   } elseif ($action == 'save') {
+      // Check if user exists
+      $check_query = "SELECT * FROM profileid WHERE id = '$userid'";
+      $check_result = mysqli_query($con, $check_query);
+      
+      if(mysqli_num_rows($check_result) > 0) {
+         // Update existing record
+         $update_query = "UPDATE profileid SET middleName='$middlename', birthday='$birthday', userName='$username' WHERE id='$userid'";
+         if(mysqli_query($con, $update_query)) {
+            $success_message = "Profile updated successfully!";
+            // Refresh user data after update
+            $result = mysqli_query($con, "SELECT * FROM profileid WHERE id = '$userid'");
+            $user_data = mysqli_fetch_assoc($result);
+         } else {
+            $error_message = "Error updating profile: " . mysqli_error($con);
+         }
+      } else {
+         // Insert new record
+         $insert_query = "INSERT INTO profileid (id, middleName, birthday, userName) VALUES ('$userid', '$middlename', '$birthday', '$username')";
+         if(mysqli_query($con, $insert_query)) {
+            $success_message = "Profile created successfully!";
+            // Refresh user data after insert
+            $result = mysqli_query($con, "SELECT * FROM profileid WHERE id = '$userid'");
+            $user_data = mysqli_fetch_assoc($result);
+         } else {
+            $error_message = "Error creating profile: " . mysqli_error($con);
+         }
+      }
+   }
+}
+
+// Handle image upload
+if (isset($_POST['upload']) && isset($_FILES["profile_pic"]) && !empty($_FILES["profile_pic"]["name"])) {
+   $fileName = $_FILES["profile_pic"]["name"];
+   $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
    $allowedTypes = array("jpg", "jpeg", "png", "gif");
-   $tempName = $_FILES["fileName"]["tmp_name"];
-   $targetPath = "uploads/" . $fileName;
+   $tempName = $_FILES["profile_pic"]["tmp_name"];
+   
+   // Generate unique filename
+   $uniqueFileName = uniqid('profile_') . '.' . $ext;
+   $uploadDir = "../member/uploads/";
+   
+   // Create directory if it doesn't exist
+   if (!file_exists($uploadDir)) {
+       mkdir($uploadDir, 0777, true);
+   }
+   
+   $targetPath = $uploadDir . $uniqueFileName;
 
    // Check file type
    if (in_array($ext, $allowedTypes)) {
       // Move uploaded file to the target directory
-      
       if (move_uploaded_file($tempName, $targetPath)) {
-         // Insert the data into the database
-         $query = "INSERT INTO profileid (gabageType, description, reward, pic) VALUES ('$garbagetype', '$message ', '$amount','$fileName')";
+         // Check if user exists first
+         $check_query = "SELECT * FROM profileid WHERE id = '$userid'";
+         $check_result = mysqli_query($con, $check_query);
+         
+         if(mysqli_num_rows($check_result) > 0) {
+            // Update existing record
+            $update_pic_query = "UPDATE profileid SET pic='$uniqueFileName' WHERE id='$userid'";
+         } else {
+            // Insert new record
+            $update_pic_query = "INSERT INTO profileid (id, pic) VALUES ('$userid', '$uniqueFileName')";
+         }
 
-         if (mysqli_query($con, $query)) {
-            echo " Successful Created";
-            header("Location: garbage-type.php");
+         if (mysqli_query($con, $update_pic_query)) {
+            $success_message = "Profile picture updated successfully!";
+            header("Location: profile.php");
             exit(); // Make sure to exit after redirect
          } else {
-            echo "Error: " . mysqli_error($con);
+            $error_message = "Error updating profile picture: " . mysqli_error($con);
          }
       } else {
-         echo "Failed to upload file.";
+         $error_message = "Failed to upload file.";
       }
    } else {
-      echo "Invalid file type.";
+      $error_message = "Invalid file type. Allowed types are: jpg, jpeg, png, gif";
    }
+}
+
+// Refresh user data after any changes
+if (isset($userid)) {
+    $result = mysqli_query($con, "SELECT * FROM profileid WHERE id = '$userid'");
+    $user_data = mysqli_fetch_assoc($result);
 }
 
 
@@ -67,93 +132,159 @@ mysqli_close($con);
       <!-- Theme style -->
       <link rel="stylesheet" href="asset/css/adminlte.min.css">
       <link rel="stylesheet" href="asset/css/style.css">
+      <style>
+         @media (max-width: 768px) {
+            .login-box {
+               width: 95% !important;
+               margin-top: 10px;
+            }
+
+            .card-body {
+               padding: 1rem;
+            }
+
+            .col-md-3, .col-md-9 {
+               flex: 0 0 100%;
+               max-width: 100%;
+            }
+
+            .col-md-4, .col-md-6 {
+               flex: 0 0 100%;
+               max-width: 100%;
+               margin-bottom: 15px;
+            }
+
+            .form-group {
+               margin-bottom: 1rem;
+            }
+
+            .profile-img-container {
+               text-align: center;
+               margin-bottom: 20px;
+            }
+
+            .profile-img-container img {
+               width: 120px;
+               height: 120px;
+               object-fit: cover;
+               margin: 0 auto;
+            }
+
+            .card-header {
+               padding: 0.75rem;
+            }
+
+            .btn {
+               margin-bottom: 10px;
+               width: 100%;
+            }
+
+            .back-btn {
+               position: fixed;
+               top: 10px;
+               left: 10px;
+               z-index: 1000;
+               background: rgba(28,153,84,0.9);
+               color: white;
+               padding: 8px 15px;
+               border-radius: 5px;
+               text-decoration: none;
+            }
+
+            .back-btn:hover {
+               background: rgba(28,153,84,1);
+               color: white;
+            }
+
+            .card-outline {
+               margin-top: 40px;
+            }
+
+            .col-md-3, .col-md-9 {
+               width: 100%;
+               padding: 10px;
+            }
+
+            .form-group {
+               margin-bottom: 1rem;
+            }
+
+            .row {
+               margin: 0;
+            }
+
+            .card {
+               border-radius: 5px;
+            }
+
+            .custom-file-input, .custom-file-label {
+               font-size: 14px;
+            }
+         }
+
+         /* General improvements */
+         .form-control {
+            margin-bottom: 10px;
+         }
+
+         .card-outline {
+            border-top: 3px solid rgba(28,153,84);
+         }
+
+         .custom-file-label {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+         }
+      </style>
    </head>
    <body class="hold-transition login-page">
-      <a href="javascript:history.back()" class="back-btn">
-         <i class="fas fa-arrow-left"></i> Back
-      </a>
-      <div class="login-box" style="width: 70%">
-         <!-- /.login-logo -->
-         <div class="card card-outline">
-            <section class="content">
-               <div class="container-fluid">
-                  <div class="card">
-                     <div class="card-header" style="background-color: rgba(28,153,84);color: rgb(235,235,235)">
-                        <h3 class="card-title">Profile Information</h3>
-                     </div>
-                     <!-- /.card-header -->
-                     <!-- form start -->
-                     <form method="POST" action="profile.php" enctype="multipart/form-data">
-                              <div class="col-md-12">
-                           <div class="row">
-                              <div class="col-md-3">
+      <div class="wrapper">
+      <section class="content">
+         <div class="container-fluid">
+            <div class="row justify-content-center">
+               <div class="col-md-12">
+                  <div class="card card-outline">
+                     <a href="javascript:void(0)" onclick="window.history.back()" class="back-btn">Back</a>
+                     <div class="card-body">
+                        <div class="row">
+                           <div class="col-md-3 text-center">
+                              <img id="avatar-preview" class="img-fluid" 
+                                 src="<?php echo !empty($user_data['pic']) ? '../member/uploads/' . $user_data['pic'] : 'asset/img/avatar.png'; ?>" 
+                                 alt="Profile Picture" style="max-width: 200px; margin-bottom: 15px;">
+                              <!-- File upload section -->
+                              <form action="profile.php" method="post" enctype="multipart/form-data">
                                  <div class="form-group">
-                                    <img src="asset/img/profile.png" width="150" style="border-radius: 5px">
-                                    <label for="exampleInputFile">Choose Profile</label>
-                                    <div class="input-group">
-                                       <div class="custom-file">
-                                          <input type="file" class="custom-file-input" id="exampleInputFile">
-                                          <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                                       </div>
+                                    <div class="custom-file">
+                                       <input type="file" class="custom-file-input" id="customFile" name="profile_pic" accept="image/*">
+                                       <label class="custom-file-label" for="customFile">Choose file</label>
                                     </div>
                                  </div>
-                              </div>
-                              <div class="col-md-9">
+                                 <button type="submit" name="upload" class="btn btn-success btn-block">Upload Picture</button>
+                              </form>
+                           </div>
+                           <div class="col-md-9">
+                              <form action="profile.php" method="post">
                                  <div class="card-header">
                                     <span class="fa fa-user"> Profile Information</span>
                                  </div>
                                  <div class="row">
                                     <div class="col-md-4">
                                        <div class="form-group">
-                                          <label for="exampleInputEmail1">First Name</label>
-                                          <input type="email" class="form-control" placeholder="first name">
-                                       </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                       <div class="form-group">
                                           <label for="exampleInputEmail1">Middle Name</label>
-                                          <input type="email" class="form-control" placeholder="middle name">
+                                          <input type="text" class="form-control" name="middleName" placeholder="middle name" 
+                                                 value="<?php echo isset($user_data['middleName']) ? htmlspecialchars($user_data['middleName']) : ''; ?>">
                                        </div>
                                     </div>
-                                    <div class="col-md-4">
-                                       <div class="form-group">
-                                          <label for="exampleInputEmail1">Last Name</label>
-                                          <input type="email" class="form-control" placeholder="last name">
-                                       </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                       <div class="form-group">
-                                          <label>Gender</label>
-                                          <select class="form-control">
-                                             <option>Male</option>
-                                             <option>Female</option>
-                                          </select>
-                                       </div>
-                                    </div>
+                                   
                                     <div class="col-md-4">
                                        <div class="form-group">
                                           <label for="exampleInputEmail1">Birthday</label>
-                                          <input type="date" class="form-control" placeholder="last name">
+                                          <input type="date" class="form-control" name="birthday" 
+                                                 value="<?php echo isset($user_data['birthday']) ? htmlspecialchars($user_data['birthday']) : ''; ?>">
                                        </div>
                                     </div>
-                                    <div class="col-md-4">
-                                       <div class="form-group">
-                                          <label for="exampleInputEmail1">Contact</label>
-                                          <input type="number" class="form-control" placeholder="contact">
-                                       </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                       <div class="form-group">
-                                          <label for="exampleInputEmail1">Email</label>
-                                          <input type="email" class="form-control" placeholder="email">
-                                       </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                       <div class="form-group">
-                                          <label for="exampleInputEmail1">Address</label>
-                                          <input type="email" class="form-control" placeholder="address">
-                                       </div>
-                                    </div>
+                                    
                                     <div class="col-md-12">
                                        <div class="card-header">
                                           <span class="fa fa-key"> Account</span>
@@ -162,29 +293,28 @@ mysqli_close($con);
                                     <div class="col-md-6">
                                        <div class="form-group">
                                           <label for="exampleInputEmail1">Username</label>
-                                          <input type="email" class="form-control" placeholder="username">
-                                       </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                       <div class="form-group">
-                                          <label for="exampleInputEmail1">Password</label>
-                                          <input type="email" class="form-control" placeholder="**********">
+                                          <input type="text" class="form-control" name="userName" placeholder="username"
+                                                 value="<?php echo isset($user_data['userName']) ? htmlspecialchars($user_data['userName']) : ''; ?>">
                                        </div>
                                     </div>
                                  </div>
-                              </div>
+                                 <div class="row mt-3">
+                                    <div class="col-6">
+                                       <button type="submit" class="btn btn-block" style="background-color: rgba(28,153,84);color: rgb(235,235,235)" name="action" value="edit">Edit</button>
+                                    </div>
+                                    <div class="col-6">
+                                       <button type="submit" class="btn btn-block" style="background-color: rgba(28,153,84);color: rgb(235,235,235)" name="action" value="save">Save</button>
+                                    </div>
+                                 </div>
+                              </form>
                            </div>
-                        </div>
-                        <!-- /.card-body -->
-                        <div class="row">
-                        <div class="col-6">
-                        <button type="submit" class="btn btn-block" style="background-color: rgba(28,153,84);color: rgb(235,235,235)">Edit</button>
-                     </div>
-                     <div class="col-6">
-                        <a href="" class="text-center btn btn-block" style="font-family: fantasy;background-color: rgba(28,153,84);color: rgb(235,235,235)">Save</a>
-                     </div>
-                  </div><br>
-                     </form>
+                        </div><br>
+                     <?php if (isset($success_message)): ?>
+                        <div class="alert alert-success"><?php echo $success_message; ?></div>
+                     <?php endif; ?>
+                     <?php if (isset($error_message)): ?>
+                        <div class="alert alert-danger"><?php echo $error_message; ?></div>
+                     <?php endif; ?>
                   </div>
                </div>
                <!-- /.container-fluid -->
@@ -193,5 +323,23 @@ mysqli_close($con);
          <!-- /.card -->
       </div>
       <!-- /.login-box -->
+
+      <!-- JavaScript for image preview -->
+      <script>
+         $(document).ready(function() {
+            // Image preview
+            $('.custom-file-input').change(function() {
+               var file = this.files[0];
+               if (file) {
+                  var reader = new FileReader();
+                  reader.onload = function(e) {
+                     $('#avatar-preview').attr('src', e.target.result);
+                     $('#avatar-preview').show();
+                  }
+                  reader.readAsDataURL(file);
+               }
+            });
+         });
+      </script>
    </body>
 </html>

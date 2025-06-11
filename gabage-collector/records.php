@@ -17,35 +17,28 @@ if (isset($_POST['submit'])) {
    $amount = mysqli_real_escape_string($con, $_POST['amount']);
    $date = mysqli_real_escape_string($con, $_POST['date']);
 
-   // Image upload handling
-   if (isset($_FILES['fileName']) && $_FILES['fileName']['error'] === UPLOAD_ERR_OK) {
-      $originalFileName = $_FILES["fileName"]["name"];
-      $ext = strtolower(pathinfo($originalFileName, PATHINFO_EXTENSION));
-      $allowedTypes = array("jpg", "jpeg", "png", "gif");
-      $maxFileSize = 5 * 1024 * 1024; // 5MB
+    // Image upload
+   $originalFileName = $_FILES["fileName"]["name"];
+   $ext = strtolower(pathinfo($originalFileName, PATHINFO_EXTENSION));
+   $allowedTypes = array("jpg", "jpeg", "png", "gif");
+   $maxFileSize = 5 * 1024 * 1024; // 5MB
+   $tempName = $_FILES["fileName"]["tmp_name"];
 
-      // Generate unique filename
-      $fileName = uniqid('waste_') . '.' . $ext;
-      $targetPath = "uploads/" . $fileName;
+   // Generate unique filename
+   $fileName = uniqid('waste_') . '.' . $ext;
+   $uploadPath = "../member/uploads/";
+   
+   // Create uploads directory if it doesn't exist
+   if (!file_exists($uploadPath)) {
+       mkdir($uploadPath, 0777, true);
+   }
+   
+   $targetPath = $uploadPath . $fileName;
 
-      // Create uploads directory if it doesn't exist
-      if (!file_exists('uploads')) {
-         mkdir('uploads', 0777, true);
-      }
-
-      // Check file size
-      if ($_FILES["fileName"]["size"] > $maxFileSize) {
-         $_SESSION['error'] = "File is too large. Maximum size is 5MB.";
-         header("Location: records.php");
-         exit();
-      }
-
-      // Check file type
-      if (!in_array($ext, $allowedTypes)) {
-         $_SESSION['error'] = "Invalid file type. Allowed types: jpg, jpeg, png, gif";
-         header("Location: records.php");
-         exit();
-      }
+   // Check file size
+   if ($_FILES["fileName"]["size"] > $maxFileSize) {
+      echo "File is too large. Maximum size is 5MB.";
+      exit();
 
       // Move uploaded file
       if (move_uploaded_file($_FILES["fileName"]["tmp_name"], $targetPath)) {
@@ -109,20 +102,89 @@ if (mysqli_num_rows($query) > 0) {
       <link rel="stylesheet" href="../asset/css/style.css ?<?php echo date('Y-m-d H:i:s') ?>">
       <link rel="stylesheet" href="../asset/tables/datatables-bs4/css/dataTables.bootstrap4.min.css ?<?php echo date('Y-m-d H:i:s') ?>">
       <style type="text/css">
-         table tr td {
-            padding: 0.3rem !important;
-         }
+      .card-info {
+         max-height: calc(100vh - 200px);
+         overflow: hidden;
+      }
 
-         table tr td p {
-            margin-top: -0.8rem !important;
-            margin-bottom: -0.8rem !important;
-            font-size: 0.9rem;
-         }
+      .table-responsive {
+         height: calc(100vh - 250px);
+         overflow-y: auto;
+         position: relative;
+      }
 
-         td a.btn {
-            font-size: 0.7rem;
+      #example1 {
+         position: relative;
+         width: 100%;
+         background-color: #ffffff;
+         border-collapse: collapse;
+      }
+
+      #example1 thead {
+         position: sticky;
+         top: 0;
+         z-index: 1;
+         background-color: #ffffff;
+      }
+
+      #example1 thead th {
+         background-color: #f4f6f9;
+         border-bottom: 2px solid #dee2e6;
+         padding: 12px 8px;
+         font-weight: 600;
+         text-align: left;
+         vertical-align: middle;
+      }
+
+      #example1 tbody tr:hover {
+         background-color: rgba(0,0,0,0.02);
+      }
+
+      table tr td {
+         padding: 0.3rem !important;
+         vertical-align: middle;
+      }
+
+      table tr td p {
+         margin-top: -0.8rem !important;
+         margin-bottom: -0.8rem !important;
+         font-size: 0.9rem;
+      }
+
+      td a.btn {
+         font-size: 0.7rem;
+      }
+
+      /* Scrollbar Styling */
+      .table-responsive::-webkit-scrollbar {
+         width: 6px;
+         height: 6px;
+      }
+
+      .table-responsive::-webkit-scrollbar-track {
+         background: #f1f1f1;
+         border-radius: 3px;
+      }
+
+      .table-responsive::-webkit-scrollbar-thumb {
+         background: #888;
+         border-radius: 3px;
+      }
+
+      .table-responsive::-webkit-scrollbar-thumb:hover {
+         background: #555;
+      }
+
+      @media (max-width: 768px) {
+         .card-info {
+            max-height: calc(100vh - 150px);
          }
-      </style>
+         
+         .table-responsive {
+            height: calc(100vh - 200px);
+         }
+      }
+   </style>
    </head>
 
    <body class="hold-transition sidebar-mini layout-fixed">
@@ -136,7 +198,7 @@ if (mysqli_num_rows($query) > 0) {
             </ul>
             <ul class="navbar-nav ml-auto">
                <li class="nav-item">
-                  <a class="nav-link" href="#" role="button">
+                  <a class="nav-link" href="../profile.php" role="button">
                      <img src="../asset/img/avatar.png" class="img-circle" alt="User Image" width="40" style="margin-top: -8px;">
                   </a>
                </li>
@@ -216,61 +278,77 @@ if (mysqli_num_rows($query) > 0) {
                   <div class="card card-info">
                      <br>
                      <div class="col-md-12">
-                        <table id="example1" class="table table-bordered">
-                           <thead>
-                              <tr>
-                                 <th>Sn</th>
-                                 <th>Garbage Type</th>
-                                 <th>Quantity</th>
-                                 <th>Total Amount</th>
-                                 <th>Date</th>
-                                 <th>Upload of scan Garbage</th>
-                                 <th>Status</th>
-                                 <th>Action</th>
-                              </tr>
-                           </thead>
-                           <tbody>
-                              <?php
-                              $sn = 1;
-                              while ($record = mysqli_fetch_assoc($query)) {
-                              ?>
+                        <div class="table-responsive">
+                           <table id="example1" class="table table-bordered">
+                              <thead>
                                  <tr>
-                                    <td> <?php echo $sn ?></td>
-                                    <td>
-                                       <?php echo $record['garbageType'] ?>
-                                    </td>
-                                    <td>
-                                       <?php echo $record['quantity'] ?>
-                                    </td>
-                                    <td>
-                                       <?php echo $record['amount'] ?>
-                                    </td>
-                                    <td>
-                                       <?php echo $record['date'] ?>
-                                    </td>
-                                    <td>
-                                       <img src="uploads/<?php echo $record['pic']; ?>" width="60" style="border: 2px solid #ddd">
-                                    </td>
-                                    <td>
-                                          <?php
-                                          $status_class = '';
-                                          $status_text = '';
-                                          if ($record['status'] == 1) {
-                                             $status_class = 'bg-success';
-                                             $status_text = 'Accepted';
-                                          } elseif ($record['status'] == 2) {
-                                             $status_class = 'bg-danger';
-                                             $status_text = 'Rejected';
-                                          } else {
-                                             $status_class = 'bg-warning';
-                                             $status_text = 'Pending';
-                                          }
-                                          ?>
-                                          <span class="badge <?php echo $status_class; ?>" style="font-size: 0.85rem; padding: 8px 12px; border-radius: 4px; font-weight: 500; letter-spacing: 0.3px;">
-                                             <?php echo $status_text; ?>
-                                          </span>
-                                    </td>
-                                    <td class="text-center">
+                                    <th>Sn</th>
+                                    <th>Garbage Type</th>
+                                    <th>Quantity</th>
+                                    <th>Total Amount</th>
+                                    <th>Date</th>
+                                    <th>Upload of scan Garbage</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                 <?php
+                                 $sn = 1;
+                                 while ($record = mysqli_fetch_assoc($query)) {
+                                 ?>
+                                    <tr>
+                                       <td> <?php echo $sn ?></td>
+                                       <td>
+                                          <?php echo $record['garbageType'] ?>
+                                       </td>
+                                       <td>
+                                          <?php echo $record['quantity'] ?>
+                                       </td>
+                                       <td>
+                                          <?php echo $record['amount'] ?>
+                                       </td>
+                                       <td>
+                                          <?php echo $record['date'] ?>
+                                       </td>
+                                       <td>
+                                         <?php
+                                         $imagePath = "../member/uploads/" . $record['pic'];
+                                         if (!empty($record['pic']) && file_exists($imagePath)): ?>
+                                             <img src="<?php echo htmlspecialchars($imagePath); ?>"
+                                                  width="60"
+                                                  height="60"
+                                                  style="border: 2px solid #ddd; object-fit: cover; border-radius: 4px;"
+                                                  onerror="this.src='../asset/img/no-image.png';"
+                                                  alt="Garbage Image">
+                                         <?php else: ?>
+                                             <img src="../asset/img/no-image.png"
+                                                  width="60"
+                                                  height="60"
+                                                  style="border: 2px solid #ddd; border-radius: 4px;"
+                                                  alt="No Image Available">
+                                         <?php endif; ?>
+                                       </td>
+                                       <td>
+                                             <?php
+                                             $status_class = '';
+                                             $status_text = '';
+                                             if ($record['status'] == 1) {
+                                                $status_class = 'bg-success';
+                                                $status_text = 'Accepted';
+                                             } elseif ($record['status'] == 2) {
+                                                $status_class = 'bg-danger';
+                                                $status_text = 'Rejected';
+                                             } else {
+                                                $status_class = 'bg-warning';
+                                                $status_text = 'Pending';
+                                             }
+                                             ?>
+                                             <span class="badge <?php echo $status_class; ?>" style="font-size: 0.85rem; padding: 8px 12px; border-radius: 4px; font-weight: 500; letter-spacing: 0.3px;">
+                                                <?php echo $status_text; ?>
+                                             </span>
+                                       </td>
+                                       <td class="text-center">
                                        <?php if($record['status'] == 0) { // Only show accept/reject for pending records ?>
                                        <form action="update-record-status.php" method="POST" style="display: inline;">
                                           <input type="hidden" name="record_id" value="<?php echo $record['id']; ?>">
@@ -298,6 +376,7 @@ if (mysqli_num_rows($query) > 0) {
                               } ?>
                            </tbody>
                         </table>
+                     </div>
                      <?php
                   } else {
                      echo '<p>No Records found.</p>';

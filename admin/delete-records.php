@@ -20,7 +20,7 @@ if(isset($_GET['id'])) {
     }
     
     // Now delete the record
-    $delete_query = "UPDATE menber_records SET isCollected=1 WHERE id = ?";
+    $delete_query = "DELETE FROM menber_records WHERE id = ?";
     $stmt = $con->prepare($delete_query);
     $stmt->bind_param("i", $id);
     

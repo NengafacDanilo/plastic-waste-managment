@@ -12,28 +12,143 @@
   <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
   <link href="asset/css/font-awesome.min.css" rel="stylesheet">
   <link href="asset/css/animate.css" rel="stylesheet">
-  <link href="asset/css/services.css" rel="stylesheet">
-  <link rel="stylesheet" href="asset/css/vendor/fontawesome/css/font-awesome.min.css">
-
-
+  <link href="asset/css/services.css" rel="stylesheet">  <link rel="stylesheet" href="asset/css/vendor/fontawesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="asset/css/navigation.css">
 
   <!-- template skin -->
   <link id="t-colors" href="asset/css/color/default.css" rel="stylesheet">
   <link id="bodybg" href="asset/css/bodybg/bg1.css" rel="stylesheet" type="text/css" />
 
   
-  <style >
+  <style>
   .bg-skin {
     background: #0062cc;
-    
   }
 
 
-  .nav>li>a:hover, .nav>li>a:focus {
-    text-decoration: none;
-    background-color: #251f1f00;
-    /* color: blue; */
-}
+  Navigation Styles
+  .navigation {
+    background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+    padding: 10px 0;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+  }
+
+  .navbar-brand {
+    font-family: 'IBM Plex Sans', sans-serif;
+    padding: 0;
+    margin-right: 50px;  /* Add space after the brand */
+  }
+
+  .navbar-brand h5 {
+    color: white;
+    margin: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .recycle-icon {
+    margin-right: 10px;
+    font-size: 24px;
+  }
+
+  /* Position nav items to the right */
+  .navbar-collapse {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  /* Adjust nav items spacing */
+  .navbar-nav {
+    margin-right: 30rem;
+    margin-left: auto;
+  }
+
+  .nav-item {
+    margin: 0 10px;
+  }
+
+  .nav-link {
+    color: white !important;
+    font-family: 'IBM Plex Sans', sans-serif;
+    transition: all 0.3s ease;
+    padding: 8px 15px;
+    display: flex;
+    align-items: left;
+  }
+
+  .nav-link i {
+    margin-right: 8px;
+    font-size: 16px;
+  
+  }
+
+  .nav-link:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    
+  }
+
+  .navbar-toggler {
+    border: none;
+    padding: 0;
+  }
+
+  .navbar-toggler:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .hamburger-icon {
+    width: 25px;
+    height: 2px;
+    background: white;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .hamburger-icon:before,
+  .hamburger-icon:after {
+    content: '';
+    position: absolute;
+    width: 25px;
+    height: 2px;
+    background: white;
+    left: 0;
+    transition: all 0.3s ease;
+  }
+
+  .hamburger-icon:before {
+    top: -8px;
+  }
+
+  .hamburger-icon:after {
+    bottom: -8px;
+  }
+
+  /* Mobile Navigation */
+  @media (max-width: 991.98px) {
+    .navbar-collapse {
+      background: rgba(57, 49, 175, 0.98);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .nav-item {
+      margin: 8px 0;
+    }
+
+    .nav-link {
+      padding: 8px 15px;
+      border-radius: 4px;
+      text-decoration: none;
+    }
+
+    .nav-link:hover {
+      background: rgba(255,255,255,0.1);
+    }
+  }
 
 .btn-skin {
   background-color: #0062cc;
@@ -110,25 +225,46 @@ footer .widget h5 {
 
 <body>
 
-  <div class="container navigation" style="background: -webkit-linear-gradient(left, #3931af, #00c6ff);width: 98.85vw;height: 70px;padding-top: 10px;">
-
-    <div class="navbar-header page-scroll">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
-        <i class="fa fa-bars"></i>
-      </button>
-      <a class="navbar-brand js-scroll-trigger" href="index.php" style="margin-top: 0px;font-family: 'IBM Plex Sans', sans-serif;">
-        <h5 style="color: white;"><i class="fa fa-recycle" aria-hidden="true"></i>&nbsp; TRANSCYCLE</h5>
-      </a>
-    </div>
-
-    <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
-      <ul class="nav navbar-nav">
-        <li class="active" style="margin-right: 40px;font-family: 'IBM Plex Sans', sans-serif;"><a href="login.php" style="color: white">HOME</a></li>
-        <li class="active" style="margin-right: 40px;font-family: 'IBM Plex Sans', sans-serif;"><a href="index.php" style="color: white">ABOUT US</a></li>
-        <li><a href="contact-form.php" style="margin-right: 40px;font-family: 'IBM Plex Sans', sans-serif;color: white">CONTACT</a></li>
-      </ul>
-    </div>
-
+  <!-- Navigation -->
+  <div class="navigation">
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <a class="navbar-brand" href="index.php">
+          <h5>
+            <span class="recycle-icon">
+              <i class="fa fa-recycle" aria-hidden="true"></i>
+            </span>
+            TRANSCYCLE
+          </h5>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="hamburger-icon"></span>
+          <span class="sr-only">Toggle navigation</span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarMain">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="login.php">
+                <i class="fa fa-home" aria-hidden="true"></i>
+                <span class="nav-text">HOME</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="index.php">
+                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                <span class="nav-text">ABOUT US</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contact-form.php">
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+                <span class="nav-text">CONTACT</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
   </div>
 
 

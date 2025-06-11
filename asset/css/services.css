@@ -287,6 +287,7 @@ Navigation
 
 .navbar.navbar-custom .navigation {
 	padding-bottom: 15px;
+	 list-style: none;
 
 }
 
